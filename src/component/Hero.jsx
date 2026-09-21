@@ -613,7 +613,7 @@ const Hero = () => {
             <FontAwesomeIcon icon={faLinkedinIn} />
           </a>
 
-          <a href="mailto:kamleshkumar223678@gmail.com">
+          <a href="mailto:ksonixsupport@gmail.com">
             <FontAwesomeIcon icon={faEnvelope} />
           </a>
 

@@ -16,7 +16,7 @@ const socialLinks = [
     { label: "LinkedIn", href: "https://linkedin.com/in/kamlesh-kumar-763367299", icon: IconBrandLinkedin },
     { label: "X", href: "https://x.com/", icon: IconBrandX },
     { label: "Instagram", href: "https://instagram.com/kumar_k_ks", icon: IconBrandInstagram },
-    { label: "Email", href: "mailto:kamleshkumar223678@gmail.com", icon: IconMail },
+    { label: "Email", href: "mailto:ksonix@gmail.com", icon: IconMail },
     { label: "GitHub", href: "github.com/kamlesh2236-ks", icon: IconBrandGithub },
 ];
 

@@ -182,12 +182,12 @@ const Contact = () => {
 
                         <li>
                             <IconMail size={20} stroke={1.5} />
-                            <a href="mailto:kamleshkumar223678@gmail.com">kamleshkumar223678@gmail.com</a>
+                            <a href="mailto:ksonixsupport@gmail.com">ksonixsupport@gmail.com</a>
                         </li>
 
                         <li>
                             <IconPhone size={20} stroke={1.5} />
-                            <span>+91 8084124525</span>
+                            <span>+91 8084124525, +91 6201802142</span>
                         </li>
 
                         <li>

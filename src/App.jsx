@@ -6,7 +6,7 @@ import Contact from './component/Contact'
 import Footer from './component/Footer'
 import Services from './component/services'
 import Packages from './component/Packages'
-import HowWeWork from './component/HowweWork'
+import HowweWork from './component/HowweWork'
 
 const App = () => {
   return (
@@ -15,7 +15,7 @@ const App = () => {
       <Services />
       <Packages />
       <Project />
-      <HowWeWork />
+      <HowweWork />
       <Testimonial />
       <Contact />
       <Footer />

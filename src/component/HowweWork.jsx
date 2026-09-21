@@ -9,7 +9,7 @@ import {
     faEye,
     faRocket,
 } from "@fortawesome/free-solid-svg-icons";
-import "./HowWeWork.css";
+import "./HowweWork.css";
 
 gsap.registerPlugin(ScrollTrigger);
 

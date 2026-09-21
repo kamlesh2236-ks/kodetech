@@ -1,0 +1,361 @@
+.svc {
+    position: relative;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Fraunces", Georgia, serif;
+}
+
+.svc-pin {
+    height: 100svh;
+    min-height: 600px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(5.5rem, 12vh, 7rem) clamp(1.25rem, 4vw, 4rem) clamp(1.5rem, 4vh, 3rem);
+}
+
+.svc-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: clamp(1rem, 3vh, 2rem);
+}
+
+.svc-head h2 {
+    margin: 0;
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+}
+
+.svc-head p {
+    max-width: 46ch;
+    margin: 0.6rem 0 0;
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+
+.svc-meter {
+    display: grid;
+    justify-items: end;
+    gap: 0.6rem;
+}
+
+.svc-count {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.svc-bar {
+    width: clamp(120px, 18vw, 200px);
+    height: 3px;
+    border-radius: 3px;
+    background: var(--border);
+    overflow: hidden;
+}
+
+.svc-fill {
+    display: block;
+    height: 100%;
+    transform: scaleX(0);
+    transform-origin: left center;
+    background: linear-gradient(90deg, var(--accent), var(--pink), var(--cyan));
+}
+
+.svc-body {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+    gap: clamp(1rem, 3vw, 2.5rem);
+}
+
+.svc-stage {
+    position: relative;
+    min-height: 0;
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    background: var(--bg-soft);
+    overflow: hidden;
+}
+
+.svc-panel {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: clamp(1.25rem, 3vw, 2.5rem);
+    opacity: 0;
+    visibility: hidden;
+    will-change: transform, opacity;
+}
+
+.svc-panel.is-first {
+    opacity: 1;
+    visibility: visible;
+}
+
+.svc-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(70% 90% at 85% 10%,
+            color-mix(in srgb, var(--svc) 26%, transparent),
+            transparent 65%);
+    pointer-events: none;
+}
+
+.svc-ghost {
+    position: absolute;
+    top: 4%;
+    right: -4%;
+    font-size: clamp(12rem, 32vw, 24rem);
+    color: var(--svc);
+    opacity: 0.09;
+    pointer-events: none;
+    will-change: transform;
+}
+
+.svc-tile {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: clamp(3.25rem, 6vw, 4rem);
+    height: clamp(3.25rem, 6vw, 4rem);
+    border-radius: 18px;
+    font-size: clamp(1.3rem, 2.4vw, 1.6rem);
+    color: var(--svc);
+    background: color-mix(in srgb, var(--svc) 16%, transparent);
+    border: 1px solid color-mix(in srgb, var(--svc) 40%, transparent);
+}
+
+.svc-copy {
+    position: relative;
+}
+
+.svc-copy h3 {
+    margin: 0;
+    max-width: 14ch;
+    font-size: clamp(2.2rem, 5vw, 4.6rem);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+}
+
+.svc-copy p {
+    max-width: 46ch;
+    margin: 1rem 0 0;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+
+.svc-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1.4rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.svc-tags li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--bg) 55%, transparent);
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--text);
+}
+
+.svc-tags li::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--svc);
+}
+
+.svc-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.15rem;
+    min-height: 0;
+}
+
+.svc-item {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    width: 100%;
+    padding: 0.6rem 0.9rem;
+    border: 0;
+    border-left: 2px solid var(--border);
+    background: transparent;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.05rem;
+    line-height: 1.2;
+    text-align: left;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.3s, border-color 0.3s, background 0.3s,
+        padding-left 0.3s;
+}
+
+.svc-item svg {
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    transition: color 0.3s;
+}
+
+.svc-item:hover {
+    color: var(--text);
+}
+
+.svc-item.is-active {
+    padding-left: 1.2rem;
+    border-left-color: var(--svc);
+    background: color-mix(in srgb, var(--svc) 10%, transparent);
+    color: var(--text);
+}
+
+.svc-item.is-active svg {
+    color: var(--svc);
+}
+
+.svc-item:focus-visible {
+    outline: 2px solid var(--svc);
+    outline-offset: 2px;
+}
+
+@media (max-width: 900px) {
+    .svc-body {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .svc-list {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .svc-head p {
+        display: none;
+    }
+
+    .svc-stage {
+        border-radius: 22px;
+    }
+
+    .svc-tags li {
+        padding: 0.4rem 0.65rem;
+        font-size: 0.72rem;
+    }
+}
+
+.svc--static .svc-pin {
+    height: auto;
+    min-height: 0;
+}
+
+.svc--static .svc-meter,
+.svc--static .svc-list {
+    display: none;
+}
+
+.svc--static .svc-body {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.svc--static .svc-stage {
+    display: grid;
+    gap: 1rem;
+    border: 0;
+    background: transparent;
+    overflow: visible;
+}
+
+.svc--static .svc-panel {
+    position: relative;
+    gap: 2rem;
+    min-height: 300px;
+    opacity: 1;
+    visibility: visible;
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    background: var(--bg-soft);
+    overflow: hidden;
+}
+
+[data-theme="light"] .svc {
+    background:
+        radial-gradient(40% 35% at 10% 25%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%),
+        radial-gradient(35% 40% at 92% 50%, color-mix(in srgb, var(--cyan) 15%, transparent), transparent 70%),
+        radial-gradient(40% 35% at 35% 75%, color-mix(in srgb, var(--pink) 12%, transparent), transparent 70%),
+        var(--bg);
+}
+
+[data-theme="light"] .svc-stage {
+    border-color: color-mix(in srgb, var(--accent) 20%, var(--border));
+    background: linear-gradient(160deg, #ffffff, color-mix(in srgb, var(--accent) 5%, #ffffff));
+    box-shadow:
+        0 40px 80px -40px color-mix(in srgb, var(--accent) 45%, transparent),
+        0 2px 8px -2px color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+[data-theme="light"] .svc-panel::before {
+    background:
+        radial-gradient(70% 90% at 85% 10%, color-mix(in srgb, var(--svc) 34%, transparent), transparent 65%),
+        radial-gradient(60% 70% at 0% 100%, color-mix(in srgb, var(--svc) 14%, transparent), transparent 70%);
+}
+
+[data-theme="light"] .svc-ghost {
+    opacity: 0.14;
+}
+
+[data-theme="light"] .svc-tile {
+    background: #ffffff;
+    border-color: color-mix(in srgb, var(--svc) 35%, transparent);
+    box-shadow: 0 12px 24px -10px color-mix(in srgb, var(--svc) 55%, transparent);
+}
+
+[data-theme="light"] .svc-tags li {
+    background: #ffffff;
+    border-color: color-mix(in srgb, var(--svc) 28%, var(--border));
+    box-shadow: 0 6px 14px -8px color-mix(in srgb, var(--svc) 45%, transparent);
+}
+
+[data-theme="light"] .svc-item:hover {
+    background: color-mix(in srgb, var(--svc) 6%, transparent);
+}
+
+[data-theme="light"] .svc-item.is-active {
+    background: #ffffff;
+    box-shadow: 0 14px 28px -16px color-mix(in srgb, var(--svc) 65%, transparent);
+}
+
+[data-theme="light"] .svc-bar {
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+[data-theme="light"] .svc--static .svc-panel {
+    background: #ffffff;
+    border-color: color-mix(in srgb, var(--svc) 25%, var(--border));
+    box-shadow: 0 24px 48px -28px color-mix(in srgb, var(--svc) 50%, transparent);
+}

@@ -1,0 +1,319 @@
+.hww {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Fraunces", Georgia, serif;
+    padding: clamp(4rem, 10vw, 8rem) clamp(1.25rem, 4vw, 4rem);
+}
+
+.hww-blob {
+    position: absolute;
+    width: min(60vw, 720px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+            color-mix(in srgb, var(--c) 22%, transparent),
+            transparent 65%);
+    pointer-events: none;
+}
+
+.hww-blob--a {
+    --c: var(--accent);
+    top: -8%;
+    left: -18%;
+}
+
+.hww-blob--b {
+    --c: var(--cyan);
+    bottom: 4%;
+    right: -18%;
+}
+
+.hww-inner {
+    position: relative;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.hww-head {
+    text-align: center;
+}
+
+.hww-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.45rem 0.95rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.hww-eyebrow::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--cyan));
+}
+
+.hww-title {
+    max-width: 18ch;
+    margin: 1.25rem auto 0;
+    font-size: clamp(2.3rem, 5.6vw, 4.8rem);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+}
+
+.hww-head p {
+    max-width: 46ch;
+    margin: 1.4rem auto 0;
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+
+.hww-steps {
+    --node: 3.5rem;
+    --mt: 1rem;
+    --gap: 0.75rem;
+    position: relative;
+    display: grid;
+    row-gap: clamp(2rem, 5vw, 3.5rem);
+    margin-top: clamp(3rem, 7vw, 5rem);
+}
+
+.hww-track {
+    position: absolute;
+    left: 50%;
+    top: calc(var(--mt) + var(--node) / 2);
+    bottom: var(--track-bottom, 3rem);
+    z-index: 1;
+    width: 2px;
+    transform: translateX(-50%);
+    border-radius: 2px;
+    background: var(--border);
+}
+
+.hww-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 0;
+    border-radius: inherit;
+    background: linear-gradient(180deg, var(--accent), var(--cyan), var(--pink));
+}
+
+.hww-fill::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -7px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    background: var(--text);
+    box-shadow:
+        0 0 0 4px color-mix(in srgb, var(--accent) 30%, transparent),
+        0 0 24px 6px color-mix(in srgb, var(--cyan) 60%, transparent);
+}
+
+.hww--static .hww-fill {
+    height: 100%;
+}
+
+.hww-step {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 5rem minmax(0, 1fr);
+    align-items: start;
+}
+
+.hww-node {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: center;
+    position: relative;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: var(--node);
+    height: var(--node);
+    margin-top: var(--mt);
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    transition: color 0.4s, border-color 0.4s, background 0.4s, box-shadow 0.4s;
+}
+
+.hww-card {
+    position: relative;
+    z-index: 1;
+    grid-row: 1;
+    max-width: 30rem;
+    padding: clamp(1.3rem, 2.4vw, 1.9rem);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    background:
+        radial-gradient(80% 60% at 0% 0%,
+            color-mix(in srgb, var(--st) 14%, transparent),
+            transparent 70%),
+        var(--bg-soft);
+    box-shadow: inset 0 2px 0 color-mix(in srgb, var(--st) 70%, transparent);
+    will-change: transform;
+}
+
+.hww-step.is-right .hww-card {
+    grid-column: 3;
+    justify-self: start;
+}
+
+.hww-step.is-left .hww-card {
+    grid-column: 1;
+    justify-self: end;
+}
+
+.hww-card::before {
+    content: "";
+    position: absolute;
+    top: calc(var(--mt) + var(--node) / 2 - 1px);
+    width: var(--gap);
+    height: 2px;
+    background: var(--st);
+    transform: scaleX(0);
+    transition: transform 0.4s ease 0.15s;
+}
+
+.hww-step.is-right .hww-card::before {
+    right: 100%;
+    transform-origin: left center;
+}
+
+.hww-step.is-left .hww-card::before {
+    left: 100%;
+    transform-origin: right center;
+}
+
+.hww-step.is-active .hww-card::before {
+    transform: scaleX(1);
+}
+
+.hww-step.is-active .hww-node {
+    border-color: var(--st);
+    color: var(--st);
+    background: color-mix(in srgb, var(--st) 14%, var(--bg));
+    box-shadow:
+        0 0 0 6px color-mix(in srgb, var(--st) 16%, transparent),
+        0 10px 30px -8px color-mix(in srgb, var(--st) 60%, transparent);
+}
+
+.hww-num {
+    display: block;
+    margin-bottom: 0.9rem;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1;
+    color: color-mix(in srgb, var(--st) 75%, var(--text));
+}
+
+.hww-card h3 {
+    margin: 0;
+    font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+}
+
+.hww-card p {
+    margin: 0.65rem 0 0;
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.65;
+    color: var(--text-muted);
+}
+
+@media (max-width: 899px) {
+    .hww-steps {
+        --node: 3rem;
+        --mt: 0.5rem;
+        --gap: 1.25rem;
+    }
+
+    .hww-track {
+        left: 1.75rem;
+    }
+
+    .hww-step {
+        grid-template-columns: 3.5rem minmax(0, 1fr);
+        column-gap: 1rem;
+    }
+
+    .hww-node {
+        grid-column: 1;
+    }
+
+    .hww-step.is-right .hww-card,
+    .hww-step.is-left .hww-card {
+        grid-column: 2;
+        justify-self: stretch;
+        max-width: none;
+    }
+
+    .hww-step.is-right .hww-card::before,
+    .hww-step.is-left .hww-card::before {
+        left: auto;
+        right: 100%;
+        transform-origin: left center;
+    }
+
+    .hww-head {
+        text-align: left;
+    }
+
+    .hww-title,
+    .hww-head p {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+[data-theme="light"] .hww-blob {
+    background: radial-gradient(circle,
+            color-mix(in srgb, var(--c) 26%, transparent),
+            transparent 65%);
+}
+
+[data-theme="light"] .hww-eyebrow {
+    background: #ffffff;
+    border-color: color-mix(in srgb, var(--accent) 22%, var(--border));
+    box-shadow: 0 8px 18px -12px color-mix(in srgb, var(--accent) 50%, transparent);
+}
+
+[data-theme="light"] .hww-node {
+    background: #ffffff;
+    box-shadow: 0 8px 20px -12px color-mix(in srgb, var(--st) 40%, transparent);
+}
+
+[data-theme="light"] .hww-card {
+    background:
+        radial-gradient(80% 60% at 0% 0%,
+            color-mix(in srgb, var(--st) 16%, transparent),
+            transparent 70%),
+        linear-gradient(180deg, #ffffff, color-mix(in srgb, var(--st) 4%, #ffffff));
+    border-color: color-mix(in srgb, var(--st) 24%, var(--border));
+    box-shadow:
+        inset 0 2px 0 color-mix(in srgb, var(--st) 70%, transparent),
+        0 28px 50px -30px color-mix(in srgb, var(--st) 55%, transparent),
+        0 2px 6px -2px color-mix(in srgb, var(--st) 16%, transparent);
+}

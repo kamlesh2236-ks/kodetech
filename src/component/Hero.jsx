@@ -11,7 +11,14 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope, faXmark } from "@fortawesome/free-solid-svg-icons";
 
-import { IconSun, IconMoon, IconArrowNarrowRight } from "@tabler/icons-react";
+import {
+  IconSun,
+  IconMoon,
+  IconArrowNarrowRight,
+  IconWorld,
+  IconDeviceMobile,
+  IconCpu,
+} from "@tabler/icons-react";
 
 import "./Hero.css";
 
@@ -26,12 +33,54 @@ import blackimg from "../assets/Development-pana.svg";
 
 import TechOrbPit from "./TechOrbPit";
 
+const services = [
+  {
+    id: "web",
+    Icon: IconWorld,
+    title: "Web Development",
+    desc: "Fast, responsive aur SEO-friendly websites & web apps — landing page se lekar full admin dashboard tak.",
+    points: [
+      "Business & Portfolio Websites",
+      "Admin Dashboards & Panels",
+      "E-commerce / Booking Systems",
+    ],
+    stack: ["React", "Next.js", "Node.js", "PHP", "MySQL"],
+    accent: "#5b8cff",
+  },
+  {
+    id: "mobile",
+    Icon: IconDeviceMobile,
+    title: "Mobile App Development",
+    desc: "Cross-platform Android & iOS apps — smooth UI, real-time data aur push notifications ke saath.",
+    points: [
+      "Android & iOS Apps",
+      "REST API Integration",
+      "Push Notifications & Auth",
+    ],
+    stack: ["React Native", "Expo", "Firebase", "REST API"],
+    accent: "#00d9ff",
+  },
+  {
+    id: "software",
+    Icon: IconCpu,
+    title: "Software Development",
+    desc: "Custom business software jo aapke workflow par fit ho — billing, inventory, CRM ya multi-tenant SaaS.",
+    points: [
+      "Custom ERP / CRM",
+      "Multi-tenant SaaS Platforms",
+      "Automation & Reporting",
+    ],
+    stack: ["Express", "MongoDB", "TypeScript", "Cloud Deploy"],
+    accent: "#ff4ecd",
+  },
+];
+
 const Hero = () => {
   const { theme, toggleTheme } = useTheme();
 
   const imageRef = useRef(null);
 
-  const [isaboutOpen, setisAboutOpen] = useState(false);
+  const [isServiceOpen, setIsServiceOpen] = useState(false);
 
   const heroRef = useRef(null);
   const textWrapRef = useRef(null);
@@ -145,32 +194,82 @@ const Hero = () => {
     );
   }, []);
 
-  useEffect(() => {
-    if (!isaboutOpen) return;
+  /* =====================================================
+     SERVICE MODAL ENTRY
+  ===================================================== */
 
-    gsap.fromTo(
-      ".about-modal",
-      {
-        x: "-100%",
-        opacity: 0,
-      },
-      {
-        x: "0%",
-        opacity: 1,
-        duration: 1,
-        ease: "power3.out",
-      },
-    );
-  }, [isaboutOpen]);
+  useEffect(() => {
+    if (!isServiceOpen) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        ".service-modal",
+        {
+          x: "-100%",
+          opacity: 0,
+        },
+        {
+          x: "0%",
+          opacity: 1,
+          duration: 0.9,
+          ease: "power3.out",
+        },
+      );
+
+      gsap.fromTo(
+        ".service-card",
+        {
+          y: 40,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          stagger: 0.12,
+          delay: 0.35,
+          ease: "power3.out",
+        },
+      );
+    });
+
+    return () => ctx.revert();
+  }, [isServiceOpen]);
+
+  /* =====================================================
+     BODY SCROLL LOCK
+  ===================================================== */
+
+  useEffect(() => {
+    document.body.style.overflow = isServiceOpen ? "hidden" : "";
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isServiceOpen]);
+
+  /* =====================================================
+     ESC TO CLOSE
+  ===================================================== */
+
+  useEffect(() => {
+    if (!isServiceOpen) return;
+
+    const onKey = (e) => {
+      if (e.key === "Escape") setIsServiceOpen(false);
+    };
+
+    window.addEventListener("keydown", onKey);
+
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isServiceOpen]);
 
   /* =====================================================
      MOUSE PARALLAX
   ===================================================== */
 
   useEffect(() => {
-    if (!textWrapRef.current || !avatarRef.current || !glowRef.current) {
-      return;
-    }
+    if (!textWrapRef.current || !glowRef.current) return;
 
     quickRefs.current = {
       textRotY: gsap.quickTo(textWrapRef.current, "rotateY", {
@@ -193,16 +292,6 @@ const Hero = () => {
         ease: "power3.out",
       }),
 
-      avatarRotY: gsap.quickTo(avatarRef.current, "rotateY", {
-        duration: 0.6,
-        ease: "power3.out",
-      }),
-
-      avatarRotX: gsap.quickTo(avatarRef.current, "rotateX", {
-        duration: 0.6,
-        ease: "power3.out",
-      }),
-
       glowX: gsap.quickTo(glowRef.current, "x", {
         duration: 0.3,
         ease: "power3.out",
@@ -214,6 +303,31 @@ const Hero = () => {
       }),
     };
   }, []);
+
+  /* =====================================================
+     AVATAR PARALLAX (modal ke andar hai, isliye alag effect)
+  ===================================================== */
+
+  useEffect(() => {
+    if (!isServiceOpen || !avatarRef.current) return;
+
+    const q = quickRefs.current;
+
+    q.avatarRotY = gsap.quickTo(avatarRef.current, "rotateY", {
+      duration: 0.6,
+      ease: "power3.out",
+    });
+
+    q.avatarRotX = gsap.quickTo(avatarRef.current, "rotateX", {
+      duration: 0.6,
+      ease: "power3.out",
+    });
+
+    return () => {
+      q.avatarRotY = null;
+      q.avatarRotX = null;
+    };
+  }, [isServiceOpen]);
 
   const handleMouseMove = (e) => {
     if (!heroRef.current) return;
@@ -251,9 +365,11 @@ const Hero = () => {
 
     /* AVATAR */
 
-    q.avatarRotY(relX * 18);
+    if (q.avatarRotY) {
+      q.avatarRotY(relX * 18);
 
-    q.avatarRotX(-relY * 18);
+      q.avatarRotX(-relY * 18);
+    }
 
     /* CURSOR GLOW */
 
@@ -277,9 +393,11 @@ const Hero = () => {
 
     q.textY(0);
 
-    q.avatarRotY(0);
+    if (q.avatarRotY) {
+      q.avatarRotY(0);
 
-    q.avatarRotX(0);
+      q.avatarRotX(0);
+    }
   };
 
   return (
@@ -472,18 +590,22 @@ const Hero = () => {
 
       <div className="cursor-glow" ref={glowRef} />
 
-      {/* ================================================= BACKGROUND ORBS ================================================= */}
-      {/* <div className="bg-orb orb-one" />
+      {/* =================================================
+          TECH ORB
+      ================================================= */}
 
-      <div className="bg-orb orb-two" /> */}
-
-      {/* ================================================= TECH ORB ================================================= */}
       <TechOrbPit mouseRef={mouseRef} />
 
-      {/* ================================================= GRAIN ================================================= */}
+      {/* =================================================
+          GRAIN
+      ================================================= */}
+
       <div className="grain-overlay" />
 
-      {/* ================================================= NAVBAR ================================================= */}
+      {/* =================================================
+          NAVBAR
+      ================================================= */}
+
       <div className="nav">
         <div className="text">
           <img
@@ -508,7 +630,7 @@ const Hero = () => {
 
       <div className="mid-section">
         <div className="mid-section-text" ref={textWrapRef}>
-          <h1 className="name">KSonix</h1>
+          <h1 className="name">KodeTech</h1>
 
           <div className="role">
             <span>Web & Mobile Studio</span>
@@ -516,9 +638,9 @@ const Hero = () => {
 
           <button
             className="about-me-button"
-            onClick={() => setisAboutOpen(true)}
+            onClick={() => setIsServiceOpen(true)}
           >
-            <span className="about-me-btn-text">About Us</span>
+            <span className="about-me-btn-text">Our Services</span>
 
             <IconArrowNarrowRight size={20} stroke={2} />
           </button>
@@ -639,87 +761,76 @@ const Hero = () => {
         </div>
       </div>
 
-      {isaboutOpen && (
-        <div
-          className="aboutModal-overlay"
-          onClick={() => setisAboutOpen(false)}
-        >
-          <div className="about-modal" onClick={(e) => e.stopPropagation()}>
-            {/* MODAL HEADER */}
+      {/* =================================================
+          SERVICES MODAL
+      ================================================= */}
 
-            <div className="about-head">
-              <h1>About Us</h1>
+      {isServiceOpen && (
+        <div
+          className="serviceModal-overlay"
+          onClick={() => setIsServiceOpen(false)}
+        >
+          <div className="service-modal" onClick={(e) => e.stopPropagation()}>
+            {/* HEAD */}
+
+            <div className="service-head">
+              <div className="service-head-text">
+                <span className="service-tag">What We Do</span>
+
+                <h1>Our Services</h1>
+
+                <p>
+                  KodeTech helps businesses and individuals turn ideas into
+                  fast, secure and user-friendly digital products — web, mobile
+                  and custom software.
+                </p>
+              </div>
+
+              <div className="service-head-art" ref={avatarRef}>
+                <img src={blackimg} alt="Development illustration" />
+              </div>
 
               <button
-                onClick={() => setisAboutOpen(false)}
-                aria-label="Close about modal"
+                className="service-close"
+                onClick={() => setIsServiceOpen(false)}
+                aria-label="Close services modal"
               >
                 <FontAwesomeIcon icon={faXmark} className="Modal-closeBtn" />
               </button>
             </div>
-            {/* MODAL BODY */}
 
-            <div className="about-body">
-              {/* LEFT */}
+            {/* CARDS */}
 
-              <div className="about-left">
-                <p>
-                  KSonix is a modern digital development service that helps
-                  businesses and individuals build professional websites, web
-                  applications, and mobile apps. We combine creative design
-                  with the latest technology to create fast, responsive, secure,
-                  and user-friendly digital solutions that turn ideas into
-                  reality.
-                </p>
+            <div className="service-grid">
+              {services.map(
+                ({ id, Icon, title, desc, points, stack, accent }) => (
+                  <div
+                    key={id}
+                    className="service-card"
+                    style={{ "--accent": accent }}
+                  >
+                    <div className="service-icon">
+                      <Icon size={26} stroke={1.75} />
+                    </div>
 
-                <div className="skills">
-                  <p>#react.js</p>
+                    <h2>{title}</h2>
 
-                  <p>#React Native</p>
+                    <p className="service-desc">{desc}</p>
 
-                  <p>#node.js</p>
+                    <ul className="service-points">
+                      {points.map((p) => (
+                        <li key={p}>{p}</li>
+                      ))}
+                    </ul>
 
-                  <p>#express</p>
-
-                  <p>#mongoDB</p>
-
-                  <p>#nextjs</p>
-
-                  <p>#html</p>
-
-                  <p>#css</p>
-
-                  <p>#javascript</p>
-
-                  <p>#typescript</p>
-
-                  <p>#php</p>
-
-                  <p>#mySql</p>
-
-                  <p>#tailwind</p>
-
-                  <p>#bootstrap</p>
-
-                  <p>#git</p>
-
-                  <p>#github</p>
-
-                  <p>#restApi</p>
-
-                  <p>#cloudinary</p>
-
-                  <p>#gsap</p>
-
-                  <p>#imagekit</p>
-                </div>
-              </div>
-
-              {/* RIGHT IMAGE */}
-
-              <div className="about-right" ref={avatarRef}>
-                <img src={blackimg} alt="About Me" />
-              </div>
+                    <div className="service-stack">
+                      {stack.map((t) => (
+                        <span key={t}>{t}</span>
+                      ))}
+                    </div>
+                  </div>
+                ),
+              )}
             </div>
 
             {/* =================================================
@@ -736,13 +847,7 @@ const Hero = () => {
 
                 <img src={mongoSvg} alt="MongoDB" />
 
-                <h2
-                  style={{
-                    color: "#4ba74b",
-                  }}
-                >
-                  M
-                </h2>
+                <h2 style={{ color: "#4ba74b" }}>M</h2>
               </div>
 
               {/* EXPRESS */}
@@ -766,13 +871,7 @@ const Hero = () => {
 
                 <img src={reactSvg} alt="React.js" />
 
-                <h2
-                  style={{
-                    color: "#00d8ff",
-                  }}
-                >
-                  R
-                </h2>
+                <h2 style={{ color: "#00d8ff" }}>R</h2>
               </div>
 
               {/* NODE */}
@@ -784,15 +883,23 @@ const Hero = () => {
 
                 <img src={nodeSvg} alt="Node.js" />
 
-                <h2
-                  style={{
-                    color: "#539e43",
-                  }}
-                >
-                  N
-                </h2>
+                <h2 style={{ color: "#539e43" }}>N</h2>
               </div>
             </div>
+
+            {/* FOOTER */}
+
+            {/* <div className="service-footer">
+              <p>Apna project idea share kijiye — hum usse product bana denge.</p>
+
+              <a
+                href="mailto:ksonixsupport@gmail.com"
+                onClick={() => setIsServiceOpen(false)}
+              >
+                Let&apos;s Talk
+                <IconArrowNarrowRight size={18} stroke={2} />
+              </a>
+            </div> */}
           </div>
         </div>
       )}

@@ -14,7 +14,7 @@ import {
     faChartLine,
     faTableCells,
 } from "@fortawesome/free-solid-svg-icons";
-import "./Services.css";
+import "./services.css";
 
 gsap.registerPlugin(ScrollTrigger);
 

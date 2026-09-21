@@ -5,7 +5,7 @@ export const testimonials = [
     role: "Founder of Smart steps, London",
     company: "Smart Steps Learning Hub",
     message:
-      "Working with Kamlesh was a great experience. He understood our requirements quickly and transformed our ideas into a clean, modern and highly interactive website. The final result exceeded our expectations.",
+      "Working with Kubetech was a great experience. He understood our requirements quickly and transformed our ideas into a clean, modern and highly interactive website. The final result exceeded our expectations.",
     rating: 5,
     avatar: "JA",
   },

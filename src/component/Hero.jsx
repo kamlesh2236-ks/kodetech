@@ -38,7 +38,7 @@ const services = [
     id: "web",
     Icon: IconWorld,
     title: "Web Development",
-    desc: "Fast, responsive aur SEO-friendly websites & web apps — landing page se lekar full admin dashboard tak.",
+    desc: "Fast, responsive aur SEO-friendly websites & web apps — From landing page to full admin dashboard.",
     points: [
       "Business & Portfolio Websites",
       "Admin Dashboards & Panels",
@@ -51,7 +51,7 @@ const services = [
     id: "mobile",
     Icon: IconDeviceMobile,
     title: "Mobile App Development",
-    desc: "Cross-platform Android & iOS apps — smooth UI, real-time data aur push notifications ke saath.",
+    desc: "Cross-platform Android & iOS apps — with smooth UI, real-time data, and push notifications.",
     points: [
       "Android & iOS Apps",
       "REST API Integration",
@@ -64,7 +64,7 @@ const services = [
     id: "software",
     Icon: IconCpu,
     title: "Software Development",
-    desc: "Custom business software jo aapke workflow par fit ho — billing, inventory, CRM ya multi-tenant SaaS.",
+    desc: "Custom business software tailored to your workflow — billing, inventory, operations, or multi-tenant SaaS.",
     points: [
       "Custom ERP / CRM",
       "Multi-tenant SaaS Platforms",

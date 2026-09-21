@@ -633,13 +633,13 @@ const Contact = ({ presetType, endpoint }) => {
                                     })}
                                 </Section>
 
-                                <Section n={3} title="Website Requirements" active={active === 2}>
+                                {/* <Section n={3} title="Website Requirements" active={active === 2}>
                                     {pick("pagesCount", "Approximate number of pages needed", PAGE_COUNTS, { full: true })}
                                     {chips("pages", "Which pages do you need? (select all that apply)", PAGES)}
                                     {chips("features", "What features do you need? (select all that apply)", FEATURES)}
-                                </Section>
+                                </Section> */}
 
-                                <Section n={4} title="Content & Branding" active={active === 3}>
+                                {/* <Section n={4} title="Content & Branding" active={active === 3}>
                                     {pick("logo", "Do you have a logo?", LOGO)}
                                     {pick("content", "Do you have website content ready?", CONTENT)}
                                     {pick("photos", "Do you have photos / images?", PHOTOS)}
@@ -653,7 +653,7 @@ const Contact = ({ presetType, endpoint }) => {
                                     {pick("deadline", "When do you need the project completed?", DEADLINES)}
                                     {pick("hosting", "Do you need hosting / domain support?", HOSTING)}
                                     {pick("maintenance", "Do you need regular maintenance after launch?", MAINTENANCE)}
-                                </Section>
+                                </Section> */}
 
                                 <Section n={6} title="Additional Notes" active={active === 5}>
                                     {area("message", "Describe your requirement in your own words", {

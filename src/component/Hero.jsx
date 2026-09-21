@@ -22,7 +22,7 @@ import reactSvg from "../assets/react.svg";
 import nodeSvg from "../assets/nodejs.svg";
 import mongoSvg from "../assets/mongo.svg";
 import expressSvg from "../assets/express.svg";
-import blackimg from "../assets/blackmy.png";
+import blackimg from "../assets/Development-pana.svg";
 
 import TechOrbPit from "./TechOrbPit";
 
@@ -489,7 +489,7 @@ const Hero = () => {
           <img
             ref={imageRef}
             src={theme === "dark" ? lightNameImg : blackName}
-            alt="Kamlesh Kumar"
+            alt="Kumar k"
           />
         </div>
 
@@ -508,17 +508,17 @@ const Hero = () => {
 
       <div className="mid-section">
         <div className="mid-section-text" ref={textWrapRef}>
-          <h1 className="name">Kamlesh Kumar</h1>
+          <h1 className="name">KSonix</h1>
 
           <div className="role">
-            <span>MERN Stack Developer</span>
+            <span>Web & Mobile Studio</span>
           </div>
 
           <button
             className="about-me-button"
             onClick={() => setisAboutOpen(true)}
           >
-            <span className="about-me-btn-text">About Me</span>
+            <span className="about-me-btn-text">About Us</span>
 
             <IconArrowNarrowRight size={20} stroke={2} />
           </button>
@@ -625,11 +625,7 @@ const Hero = () => {
             <FontAwesomeIcon icon={faInstagram} />
           </a>
 
-          <a
-            href="https://x.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href="https://x.com" target="_blank" rel="noopener noreferrer">
             <FontAwesomeIcon icon={faXTwitter} />
           </a>
 
@@ -652,7 +648,7 @@ const Hero = () => {
             {/* MODAL HEADER */}
 
             <div className="about-head">
-              <h1>About Me</h1>
+              <h1>About Us</h1>
 
               <button
                 onClick={() => setisAboutOpen(false)}
@@ -668,14 +664,18 @@ const Hero = () => {
 
               <div className="about-left">
                 <p>
-                  I’m a passionate MERN Stack Developer focused on building
-                  modern, scalable, and responsive web applications. I enjoy
-                  turning ideas into clean, functional digital experiences using
-                  MongoDB, Express.js, React, and Node.js.
+                  KSonix is a modern digital development service that helps
+                  businesses and individuals build professional websites, web
+                  applications, and mobile apps. We combine creative design
+                  with the latest technology to create fast, responsive, secure,
+                  and user-friendly digital solutions that turn ideas into
+                  reality.
                 </p>
 
                 <div className="skills">
                   <p>#react.js</p>
+
+                  <p>#React Native</p>
 
                   <p>#node.js</p>
 
@@ -690,6 +690,8 @@ const Hero = () => {
                   <p>#css</p>
 
                   <p>#javascript</p>
+
+                  <p>#typescript</p>
 
                   <p>#php</p>
 

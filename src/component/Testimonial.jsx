@@ -136,7 +136,7 @@ const Testimonial = () => {
 
             <div className="testimonial-heading-wrap">
                 <div className="testimonial-heading-line"></div>
-                <h2>What my clients are saying?</h2>
+                <h2>What our clients are saying?</h2>
             </div>
 
             <div className="testimonial-slider">

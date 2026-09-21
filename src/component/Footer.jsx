@@ -32,7 +32,7 @@ const Footer = () => {
             <div className="footer-inner">
 
                 <p className="footer-copy">
-                    Kumar &copy; {year}
+                    Ksonix &copy; {year}
                 </p>
 
                 <div className="footer-logo-wrap">

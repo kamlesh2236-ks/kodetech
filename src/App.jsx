@@ -6,7 +6,7 @@ import Contact from './component/Contact'
 import Footer from './component/Footer'
 import Services from './component/services'
 import Packages from './component/Packages'
-import HowWeWork from './component/Howwework'
+import HowWeWork from './component/HowweWork'
 
 const App = () => {
   return (

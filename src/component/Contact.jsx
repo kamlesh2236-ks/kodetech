@@ -524,7 +524,7 @@ const Contact = ({ presetType, endpoint }) => {
                                 <span className="ct-detail-icon">
                                     <IconMail size={20} stroke={1.5} />
                                 </span>
-                                <a href="mailto:ksonixsupport@gmail.com">ksonixsupport@gmail.com</a>
+                                <a href="mailto:kodetechsupport@gmail.com">kodetechsupport@gmail.com</a>
                             </li>
                             <li>
                                 <span className="ct-detail-icon">

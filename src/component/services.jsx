@@ -1,6 +1,5 @@
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCode,
@@ -16,9 +15,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./services.css";
 
-gsap.registerPlugin(ScrollTrigger);
-
 const COLORS = ["var(--accent)", "var(--cyan)", "var(--pink)", "var(--blue)"];
+
+// Seconds each tab stays active before auto-advancing to the next one.
+const SLIDE_DURATION = 5;
 
 const SERVICES = [
     {
@@ -96,97 +96,122 @@ const pad = (v) => String(v).padStart(2, "0");
 export default function Services() {
     const rootRef = useRef(null);
     const countRef = useRef(null);
-    const stRef = useRef(null);
+    const panelRefs = useRef([]);
+    const ghostRefs = useRef([]);
+    const progressRefs = useRef([]);
+    const progressTweenRef = useRef(null);
+    const reducedMotionRef = useRef(false);
+
+    const [active, setActive] = useState(0);
     const n = SERVICES.length;
 
+    // Track prefers-reduced-motion once, live.
     useLayoutEffect(() => {
-        const root = rootRef.current;
-        const mm = gsap.matchMedia();
+        const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+        reducedMotionRef.current = mq.matches;
+        const onChange = (e) => {
+            reducedMotionRef.current = e.matches;
+        };
+        mq.addEventListener("change", onChange);
+        return () => mq.removeEventListener("change", onChange);
+    }, []);
 
-        mm.add("(prefers-reduced-motion: no-preference)", () => {
-            const panels = Array.from(root.querySelectorAll(".svc-panel"));
-            const ghosts = Array.from(root.querySelectorAll(".svc-ghost"));
-            const items = Array.from(root.querySelectorAll(".svc-item"));
-            const fill = root.querySelector(".svc-fill");
-            let current = -1;
+    // Crossfade the panels + spin the ghost icon whenever the active tab changes.
+    useLayoutEffect(() => {
+        const panels = panelRefs.current;
+        const ghosts = ghostRefs.current;
+        const reduced = reducedMotionRef.current;
 
-            const setActive = (i) => {
-                if (i === current) return;
-                current = i;
-                items.forEach((el, k) => {
-                    el.classList.toggle("is-active", k === i);
-                    if (k === i) el.setAttribute("aria-current", "true");
-                    else el.removeAttribute("aria-current");
-                });
-                countRef.current.textContent = `${pad(i + 1)} / ${pad(n)}`;
-            };
-            setActive(0);
-
-            const tl = gsap.timeline({
-                defaults: { ease: "none" },
-                scrollTrigger: {
-                    trigger: root,
-                    start: "top top",
-                    end: () => "+=" + window.innerHeight * n * 0.7,
-                    pin: true,
-                    scrub: 0.6,
-                    anticipatePin: 1,
-                    invalidateOnRefresh: true,
-                    onUpdate: (self) =>
-                        setActive(Math.min(n - 1, Math.floor(self.progress * n))),
-                },
-            });
-
-            stRef.current = tl.scrollTrigger;
-
-            tl.to(fill, { scaleX: 1, duration: n }, 0);
-
-            panels.forEach((panel, i) => {
-                if (i > 0) {
-                    tl.to(
-                        panels[i - 1],
-                        { autoAlpha: 0, y: -48, duration: 0.3, ease: "power2.in" },
-                        i - 0.3
-                    );
-                    tl.fromTo(
-                        panel,
-                        { autoAlpha: 0, y: 48 },
-                        { autoAlpha: 1, y: 0, duration: 0.3, ease: "power2.out" },
-                        i - 0.15
-                    );
-                }
-                tl.fromTo(
-                    ghosts[i],
-                    { rotate: -14, scale: 0.85 },
-                    { rotate: 10, scale: 1.08, duration: 1.3 },
-                    Math.max(0, i - 0.3)
+        panels.forEach((panel, i) => {
+            if (!panel) return;
+            gsap.killTweensOf(panel);
+            if (i === active) {
+                gsap.fromTo(
+                    panel,
+                    reduced ? { autoAlpha: 1, y: 0 } : { autoAlpha: 0, y: 32 },
+                    {
+                        autoAlpha: 1,
+                        y: 0,
+                        duration: reduced ? 0 : 0.5,
+                        ease: "power3.out",
+                    }
                 );
-            });
-
-            tl.to({}, { duration: 0.01 }, n - 0.01);
-
-            return () => {
-                stRef.current = null;
-            };
+            } else {
+                gsap.to(panel, {
+                    autoAlpha: 0,
+                    y: reduced ? 0 : -24,
+                    duration: reduced ? 0 : 0.35,
+                    ease: "power2.in",
+                });
+            }
         });
 
-        mm.add("(prefers-reduced-motion: reduce)", () => {
-            root.classList.add("svc--static");
-            return () => root.classList.remove("svc--static");
+        const ghost = ghosts[active];
+        if (ghost && !reduced) {
+            gsap.killTweensOf(ghost);
+            gsap.fromTo(
+                ghost,
+                { rotate: -14, scale: 0.85 },
+                { rotate: 10, scale: 1.08, duration: SLIDE_DURATION * 0.9, ease: "none" }
+            );
+        }
+
+        if (countRef.current) {
+            countRef.current.textContent = `${pad(active + 1)} / ${pad(n)}`;
+        }
+    }, [active, n]);
+
+    // Per-tab progress bars: filled for past tabs, animating for the active
+    // one, empty for the rest. When it finishes, auto-advance to the next tab.
+    useEffect(() => {
+        progressTweenRef.current?.kill();
+
+        progressRefs.current.forEach((bar, i) => {
+            if (!bar) return;
+            gsap.killTweensOf(bar);
+            if (i < active) gsap.set(bar, { scaleX: 1 });
+            else if (i > active) gsap.set(bar, { scaleX: 0 });
         });
 
-        return () => mm.revert();
-    }, [n]);
+        const bar = progressRefs.current[active];
+        if (!bar) return;
 
-    const jump = (i) => {
-        const st = stRef.current;
-        if (st) {
-            st.scroll(st.start + ((i + 0.5) / n) * (st.end - st.start));
+        if (reducedMotionRef.current) {
+            gsap.set(bar, { scaleX: 1 });
             return;
         }
-        rootRef.current
-            .querySelectorAll(".svc-panel")
-        [i]?.scrollIntoView({ behavior: "smooth", block: "center" });
+
+        gsap.set(bar, { scaleX: 0 });
+        progressTweenRef.current = gsap.to(bar, {
+            scaleX: 1,
+            duration: SLIDE_DURATION,
+            ease: "none",
+            onComplete: () => setActive((prev) => (prev + 1) % n),
+        });
+
+        return () => progressTweenRef.current?.kill();
+    }, [active, n]);
+
+    // Pause autoplay while the user is hovering / focused inside the section.
+    useEffect(() => {
+        const root = rootRef.current;
+        const pause = () => progressTweenRef.current?.pause();
+        const resume = () => progressTweenRef.current?.play();
+        root.addEventListener("mouseenter", pause);
+        root.addEventListener("mouseleave", resume);
+        root.addEventListener("focusin", pause);
+        root.addEventListener("focusout", resume);
+        return () => {
+            root.removeEventListener("mouseenter", pause);
+            root.removeEventListener("mouseleave", resume);
+            root.removeEventListener("focusin", pause);
+            root.removeEventListener("focusout", resume);
+        };
+    }, []);
+
+    const selectTab = (i) => {
+        if (i === active) return;
+        setActive(i);
     };
 
     return (
@@ -210,9 +235,6 @@ export default function Services() {
                         <span className="svc-count" ref={countRef}>
                             01 / {pad(n)}
                         </span>
-                        <div className="svc-bar">
-                            <span className="svc-fill" />
-                        </div>
                     </div>
                 </header>
 
@@ -221,10 +243,17 @@ export default function Services() {
                         {SERVICES.map((s, i) => (
                             <article
                                 key={s.title}
-                                className={`svc-panel${i === 0 ? " is-first" : ""}`}
+                                ref={(el) => (panelRefs.current[i] = el)}
+                                className={`svc-panel${i === active ? " is-active" : ""}`}
                                 style={{ "--svc": COLORS[i % COLORS.length] }}
+                                aria-hidden={i !== active}
                             >
-                                <FontAwesomeIcon icon={s.icon} className="svc-ghost" />
+                                <span
+                                    className="svc-ghost"
+                                    ref={(el) => (ghostRefs.current[i] = el)}
+                                >
+                                    <FontAwesomeIcon icon={s.icon} />
+                                </span>
 
                                 <span className="svc-tile">
                                     <FontAwesomeIcon icon={s.icon} />
@@ -248,12 +277,19 @@ export default function Services() {
                             <button
                                 key={s.title}
                                 type="button"
-                                className="svc-item"
+                                className={`svc-item${i === active ? " is-active" : ""}`}
                                 style={{ "--svc": COLORS[i % COLORS.length] }}
-                                onClick={() => jump(i)}
+                                onClick={() => selectTab(i)}
+                                aria-current={i === active ? "true" : undefined}
                             >
                                 <FontAwesomeIcon icon={s.icon} />
                                 <span>{s.title}</span>
+                                <span className="svc-item-track" aria-hidden="true">
+                                    <span
+                                        className="svc-item-progress"
+                                        ref={(el) => (progressRefs.current[i] = el)}
+                                    />
+                                </span>
                             </button>
                         ))}
                     </nav>

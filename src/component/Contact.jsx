@@ -27,9 +27,9 @@ const socialLinks = [
 const STEP_NAMES = [
     "Basic details",
     "Project type",
-    "Website requirements",
-    "Content & branding",
-    "Budget & timeline",
+    // "Website requirements",
+    // "Content & branding",
+    // "Budget & timeline",
     "Additional notes",
 ];
 
@@ -564,7 +564,7 @@ const Contact = ({ presetType, endpoint }) => {
                         <div className="ct-progress">
                             <div className="ct-progress-head">
                                 <span>Your request</span>
-                                <span className="ct-count">{doneCount} / 6</span>
+                                <span className="ct-count">{doneCount} / 3</span>
                             </div>
 
                             <div className="ct-bar" aria-hidden="true">

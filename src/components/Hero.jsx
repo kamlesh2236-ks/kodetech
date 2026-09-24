@@ -38,7 +38,7 @@ gsap.registerPlugin(ScrollToPlugin);
 const NAV_LINKS = [
   { label: "Services", id: "services" },
   { label: "Packages", id: "packages" },
-  { label: "Our Work", id: "how-we-work" },
+  { label: "Our Work", id: "project" },
   { label: "Contact Us", id: "contact" },
 ];
 

@@ -8,14 +8,16 @@ const ProjectCard = ({ project, reverse, index = 0 }) => {
   const stageRef = useRef(null);
   const innerRef = useRef(null);
 
-  // 3D cursor-tilt + moving spotlight sheen across the tablet.
+  // 3D cursor-tilt + moving spotlight sheen across the tablet — desktop
+  // mouse-hover only, skipped entirely on touch devices.
   useEffect(() => {
     const stage = stageRef.current;
     const inner = innerRef.current;
     if (!stage || !inner) return;
 
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (mq.matches) return;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const noHover = window.matchMedia("(hover: none), (pointer: coarse)");
+    if (reducedMotion.matches || noHover.matches) return;
 
     const rotateX = gsap.quickTo(inner, "rotationX", { duration: 0.6, ease: "power3.out" });
     const rotateY = gsap.quickTo(inner, "rotationY", { duration: 0.6, ease: "power3.out" });
@@ -29,7 +31,7 @@ const ProjectCard = ({ project, reverse, index = 0 }) => {
       if (!pendingEvent) return;
 
       const rect = stage.getBoundingClientRect();
-      const px = (pendingEvent.clientX - rect.left) / rect.width - 0.5; // -0.5 .. 0.5
+      const px = (pendingEvent.clientX - rect.left) / rect.width - 0.5;
       const py = (pendingEvent.clientY - rect.top) / rect.height - 0.5;
 
       rotateY(px * 16);
@@ -80,18 +82,12 @@ const ProjectCard = ({ project, reverse, index = 0 }) => {
 
   return (
     <article className={`project-card ${reverse ? "reverse" : ""}`}>
-      {/* =========================
-          PROJECT VISUAL
-      ========================== */}
-
       <div className="project-visual">
         <span className="card-index" aria-hidden="true">
           {pad(index)}
         </span>
 
         <div className="project-stage" ref={stageRef}>
-          {/* Tablet */}
-
           <div className="tab-skills">
             <div className="tab-inner" ref={innerRef}>
               <span className="tab-sheen" aria-hidden="true" />
@@ -107,8 +103,6 @@ const ProjectCard = ({ project, reverse, index = 0 }) => {
                 className="tab-frame"
                 alt={`${project.title} tablet`}
               />
-
-              {/* Hover Link */}
 
               <a
                 href={project.link}
@@ -126,8 +120,6 @@ const ProjectCard = ({ project, reverse, index = 0 }) => {
         </div>
       </div>
 
-      {/* ========================= PROJECT CONTENT ========================== */}
-
       <div className="pr-text">
         <h1 style={titleStyle}>{project.title}</h1>
 
@@ -136,8 +128,6 @@ const ProjectCard = ({ project, reverse, index = 0 }) => {
         </p>
 
         <p className="description">{project.description}</p>
-
-        {/* Technologies */}
 
         <div className="tag">
           {project.technologies.map((tech, i) => (

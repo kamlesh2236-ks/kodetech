@@ -339,10 +339,6 @@
     translateX(calc(-50% + var(--slide-x, 0px))) translateY(-8px);
 }
 
-
-/* Inner 3D-tilt layer — kept separate from .tab-skills so the cursor
-   tilt (driven by GSAP) never fights with the slide/hover transform
-   (driven by CSS custom properties) on the same element. */
 .tab-skills .tab-inner {
   position: relative;
   width: 100%;
@@ -353,23 +349,7 @@
   --my: 50%;
 }
 
-/* Cursor-following highlight sheen */
-.tab-sheen {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
-  opacity: 0;
-  border-radius: 6px;
-  background: radial-gradient(circle at var(--mx) var(--my),
-      rgba(255, 255, 255, 0.28),
-      transparent 55%);
-  transition: opacity 0.3s ease;
-}
 
-.project-stage:hover .tab-sheen {
-  opacity: 1;
-}
 
 
 .tab-skills .content-img {

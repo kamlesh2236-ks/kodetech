@@ -21,10 +21,16 @@ const ProjectCard = ({ project, reverse, index = 0 }) => {
     const rotateY = gsap.quickTo(inner, "rotationY", { duration: 0.6, ease: "power3.out" });
     const liftZ = gsap.quickTo(inner, "z", { duration: 0.6, ease: "power3.out" });
 
-    const handleMove = (e) => {
+    let rafId = null;
+    let pendingEvent = null;
+
+    const applyMove = () => {
+      rafId = null;
+      if (!pendingEvent) return;
+
       const rect = stage.getBoundingClientRect();
-      const px = (e.clientX - rect.left) / rect.width - 0.5; // -0.5 .. 0.5
-      const py = (e.clientY - rect.top) / rect.height - 0.5;
+      const px = (pendingEvent.clientX - rect.left) / rect.width - 0.5; // -0.5 .. 0.5
+      const py = (pendingEvent.clientY - rect.top) / rect.height - 0.5;
 
       rotateY(px * 16);
       rotateX(py * -12);
@@ -34,16 +40,30 @@ const ProjectCard = ({ project, reverse, index = 0 }) => {
       inner.style.setProperty("--my", `${(py + 0.5) * 100}%`);
     };
 
+    const handleMove = (e) => {
+      pendingEvent = e;
+      if (rafId === null) {
+        rafId = requestAnimationFrame(applyMove);
+      }
+    };
+
     const handleLeave = () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+      pendingEvent = null;
+
       rotateY(0);
       rotateX(0);
       liftZ(0);
     };
 
-    stage.addEventListener("mousemove", handleMove);
+    stage.addEventListener("mousemove", handleMove, { passive: true });
     stage.addEventListener("mouseleave", handleLeave);
 
     return () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
       stage.removeEventListener("mousemove", handleMove);
       stage.removeEventListener("mouseleave", handleLeave);
     };

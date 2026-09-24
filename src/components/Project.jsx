@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useRef } from "react";
 import "./project.css";
 import { projects } from "../data/project";
-import ProjectCard from "../component/ProjectCard";
+import ProjectCard from "../components/ProjectCard";
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -9,6 +9,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import skillPlatform from "../assets/skill_platform_light_on.svg";
 
 gsap.registerPlugin(ScrollTrigger);
+ScrollTrigger.config({ ignoreMobileResize: true });
 
 const SLIDE_DISTANCE = 160;
 
@@ -120,12 +121,11 @@ const Projects = () => {
         if (textEls.length) {
           tl.fromTo(
             textEls,
-            { autoAlpha: 0, y: 26, filter: "blur(6px)" },
+            { autoAlpha: 0, y: 26 },
             {
               autoAlpha: 1,
               y: 0,
-              filter: "blur(0px)",
-              duration: 0.7,
+              duration: 0.6,
               stagger: 0.08,
               ease: "power3.out",
             },
@@ -163,8 +163,8 @@ const Projects = () => {
         i === 0 ? showTab(0) : hideTab(i);
       });
 
-      // ---------- Platform movement (smooth via quickTo) ----------
-      const movePlatform = (stage) => {
+      // ---------- Platform movement ----------
+      const getRawPosition = (stage) => {
         const sectionRect = section.getBoundingClientRect();
         const stageRect = stage.getBoundingClientRect();
 
@@ -183,14 +183,18 @@ const Projects = () => {
         return { x, y };
       };
 
-      const xTo = gsap.quickTo(platform, "x", { duration: 0.5, ease: "power3.out" });
-      const yTo = gsap.quickTo(platform, "y", { duration: 0.5, ease: "power3.out" });
+      let stagePositions = [];
+      const computeStagePositions = () => {
+        stagePositions = Array.from(stages).map(getRawPosition);
+      };
+      computeStagePositions();
 
-      const firstPosition = movePlatform(stages[0]);
+      const xTo = gsap.quickTo(platform, "x", { duration: 0.35, ease: "power3.out" });
+      const yTo = gsap.quickTo(platform, "y", { duration: 0.35, ease: "power3.out" });
 
       gsap.set(platform, {
-        x: firstPosition.x,
-        y: firstPosition.y,
+        x: stagePositions[0].x,
+        y: stagePositions[0].y,
         autoAlpha: 0,
       });
       gsap.to(platform, { autoAlpha: 1, duration: 0.7, delay: 0.15 });
@@ -212,13 +216,10 @@ const Projects = () => {
         const path = railPathRef.current;
         if (!path) return;
 
-        const points = Array.from(stages).map((stage) => {
-          const pos = movePlatform(stage);
-          return {
-            x: pos.x + platform.offsetWidth / 2,
-            y: pos.y + platform.offsetHeight / 2,
-          };
-        });
+        const points = stagePositions.map((pos) => ({
+          x: pos.x + platform.offsetWidth / 2,
+          y: pos.y + platform.offsetHeight / 2,
+        }));
 
         if (!points.length) return;
 
@@ -242,7 +243,7 @@ const Projects = () => {
             trigger: section,
             start: "top 65%",
             end: "bottom 75%",
-            scrub: 0.6,
+            scrub: true,
           },
           overwrite: true,
         });
@@ -259,7 +260,7 @@ const Projects = () => {
           start: "top 70%",
           end: "top 25%",
 
-          scrub: 1.2,
+          scrub: true,
 
           onEnter: () => {
             platform.classList.add("is-scrolling");
@@ -284,8 +285,8 @@ const Projects = () => {
           },
 
           onUpdate: (self) => {
-            const previous = movePlatform(stages[index - 1]);
-            const current = movePlatform(stages[index]);
+            const previous = stagePositions[index - 1];
+            const current = stagePositions[index];
 
             xTo(gsap.utils.interpolate(previous.x, current.x, self.progress));
             yTo(gsap.utils.interpolate(previous.y, current.y, self.progress));
@@ -295,16 +296,24 @@ const Projects = () => {
 
       ScrollTrigger.refresh();
 
+      let resizeTimeout;
+      let lastWidth = window.innerWidth;
       handleResize = () => {
-        const position = movePlatform(stages[0]);
+        if (window.innerWidth === lastWidth) return;
+        lastWidth = window.innerWidth;
 
-        gsap.set(platform, {
-          x: position.x,
-          y: position.y,
-        });
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          computeStagePositions();
 
-        buildRail();
-        ScrollTrigger.refresh();
+          gsap.set(platform, {
+            x: stagePositions[0].x,
+            y: stagePositions[0].y,
+          });
+
+          buildRail();
+          ScrollTrigger.refresh();
+        }, 150);
       };
 
       window.addEventListener("resize", handleResize);

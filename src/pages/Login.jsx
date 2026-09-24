@@ -10,7 +10,7 @@ import {
 } from "@tabler/icons-react";
 import gsap from "gsap";
 import { loginUser } from "../api/auth.api";
-import "./login.css";
+import "./Login.css";
 
 const Login = () => {
     const pageRef = useRef(null);

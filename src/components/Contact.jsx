@@ -15,6 +15,7 @@ import {
 } from "@tabler/icons-react";
 
 import "./Contact.css";
+import {enquiry} from "../api/enquiry.api";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
@@ -72,35 +73,35 @@ const PROJECT_TYPES = [
 ];
 
 const YES_NO = ["Yes", "No", "Not sure"];
-const PAGE_COUNTS = ["1 – 3 pages", "4 – 5 pages", "6 – 10 pages", "10 – 20 pages", "20+ pages", "Not sure"];
+// const PAGE_COUNTS = ["1 – 3 pages", "4 – 5 pages", "6 – 10 pages", "10 – 20 pages", "20+ pages", "Not sure"];
 
-const PAGES = [
-    "Home", "About", "Services", "Courses / Departments", "Gallery", "Notices / Events",
-    "Admission / Enquiry", "Contact", "Blog / News", "Portfolio", "Testimonials", "Other",
-];
+// const PAGES = [
+//     "Home", "About", "Services", "Courses / Departments", "Gallery", "Notices / Events",
+//     "Admission / Enquiry", "Contact", "Blog / News", "Portfolio", "Testimonials", "Other",
+// ];
 
-const FEATURES = [
-    "Contact form", "Admission enquiry form", "WhatsApp button", "Google Maps", "Photo gallery",
-    "Notice board", "Downloadable PDFs", "Payment link", "Login system", "Admin panel",
-    "Google Sheet integration", "Email alerts", "WhatsApp automation", "AI chatbot", "Not sure",
-];
+// const FEATURES = [
+//     "Contact form", "Admission enquiry form", "WhatsApp button", "Google Maps", "Photo gallery",
+//     "Notice board", "Downloadable PDFs", "Payment link", "Login system", "Admin panel",
+//     "Google Sheet integration", "Email alerts", "WhatsApp automation", "AI chatbot", "Not sure",
+// ];
 
-const LOGO = ["Yes, I have one", "No", "I need one designed"];
-const CONTENT = ["Yes, ready", "Partly ready", "No, I need help"];
-const PHOTOS = ["Yes", "Some", "No"];
+// const LOGO = ["Yes, I have one", "No", "I need one designed"];
+// const CONTENT = ["Yes, ready", "Partly ready", "No, I need help"];
+// const PHOTOS = ["Yes", "Some", "No"];
 
-const BUDGETS = [
-    "Under ₹10,000",
-    "₹10,000 – ₹25,000",
-    "₹25,000 – ₹50,000",
-    "₹50,000 – ₹1,00,000",
-    "Above ₹1,00,000",
-    "Not sure, please suggest",
-];
+// const BUDGETS = [
+//     "Under ₹10,000",
+//     "₹10,000 – ₹25,000",
+//     "₹25,000 – ₹50,000",
+//     "₹50,000 – ₹1,00,000",
+//     "Above ₹1,00,000",
+//     "Not sure, please suggest",
+// ];
 
-const DEADLINES = ["Within 1 week", "Within 2 weeks", "Within 1 month", "2 – 3 months", "Flexible"];
-const HOSTING = ["Yes, hosting and domain", "Only hosting", "Only domain", "No, I have both", "Not sure"];
-const MAINTENANCE = ["Yes", "No", "Maybe later"];
+// const DEADLINES = ["Within 1 week", "Within 2 weeks", "Within 1 month", "2 – 3 months", "Flexible"];
+// const HOSTING = ["Yes, hosting and domain", "Only hosting", "Only domain", "No, I have both", "Not sure"];
+// const MAINTENANCE = ["Yes", "No", "Maybe later"];
 const CALL_TIMES = ["Morning (9 – 12)", "Afternoon (12 – 4)", "Evening (4 – 8)", "Anytime"];
 const SOURCES = ["Google search", "Instagram", "Facebook", "LinkedIn", "Friend or referral", "Other"];
 
@@ -264,7 +265,7 @@ const Contact = ({ presetType, endpoint }) => {
 
     useEffect(() => {
         gsap.to(barRef.current, {
-            scaleX: doneCount / 6,
+            scaleX: doneCount / 3,
             duration: 0.6,
             ease: "power3.out",
         });
@@ -361,16 +362,9 @@ const Contact = ({ presetType, endpoint }) => {
     };
 
     const send = async (data) => {
-        if (!endpoint) {
-            await new Promise((r) => setTimeout(r, 1200));
-            return;
-        }
-        const res = await fetch(endpoint, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-        });
-        if (!res.ok) throw new Error("Request failed");
+        const response = await enquiry(data);
+
+        return response;
     };
 
     const handleSubmit = async (e) => {

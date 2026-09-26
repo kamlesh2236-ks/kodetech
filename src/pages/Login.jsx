@@ -9,6 +9,7 @@ import {
     IconArrowRight,
 } from "@tabler/icons-react";
 import gsap from "gsap";
+import { useNavigate } from "react-router-dom";
 import { loginUser } from "../api/auth.api";
 import "./Login.css";
 
@@ -23,7 +24,8 @@ const Login = () => {
     const [remember, setRemember] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const [formData, setFormData] = useState({ email: "", password: "" })
+    const [formData, setFormData] = useState({ email: "", password: "" });
+    const navigate = useNavigate();
 
     // ---------- Entrance animation ----------
     useLayoutEffect(() => {
@@ -33,13 +35,13 @@ const Login = () => {
             tl.fromTo(
                 ".login-brand > *",
                 { autoAlpha: 0, y: 24 },
-                { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.1 }
+                { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.1 },
             )
                 .fromTo(
                     cardRef.current,
                     { autoAlpha: 0, y: 30, scale: 0.96 },
                     { autoAlpha: 1, y: 0, scale: 1, duration: 0.7 },
-                    0.15
+                    0.15,
                 )
                 .fromTo(
                     ".login-field, .login-row, .login-submit, .login-divider, .login-socials, .login-footer",
@@ -51,7 +53,7 @@ const Login = () => {
                         duration: 0.5,
                         stagger: 0.06,
                     },
-                    0.4
+                    0.4,
                 );
         }, pageRef);
 
@@ -93,28 +95,34 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        try {
-
-            if (!email || !password) {
-                setError("Please fill in both fields to continue.");
-                gsap.fromTo(
-                    cardRef.current,
-                    { x: -8 },
-                    { x: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" }
-                );
-                return;
-            }
-
-        } catch {
-
-            setError("");
-            setLoading(true);
+        if (!email || !password) {
+            setError("Please fill in both fields to continue.");
+            gsap.fromTo(
+                cardRef.current,
+                { x: -8 },
+                { x: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" },
+            );
+            return;
         }
 
-        // Simulate an auth request — replace with your real API call.
-        setTimeout(() => setLoading(false), 1400);
-    };
+        try {
+            setLoading(true);
+            const data = await loginUser({
+                email, password
+            });
 
+            // console.log("Login response", data);
+            navigate("/admin/dashboard");
+        } catch (err) {
+            console.log("Login Error", err);
+            setError(
+                err.response?.data?.message ||
+                "Login failed. Please try again."
+            );
+        }finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="login-page" ref={pageRef}>
@@ -135,8 +143,8 @@ const Login = () => {
                     </h1>
 
                     <p>
-                        Sign in to pick up right where you left off — projects, clients
-                        and everything in between, all in one place.
+                        Sign in to pick up right where you left off — projects, clients and
+                        everything in between, all in one place.
                     </p>
 
                     <div className="login-orb-field" aria-hidden="true">
@@ -182,7 +190,11 @@ const Login = () => {
                                 onClick={() => setShowPassword((v) => !v)}
                                 aria-label={showPassword ? "Hide password" : "Show password"}
                             >
-                                {showPassword ? <IconEyeOff size={18} /> : <IconEye size={18} />}
+                                {showPassword ? (
+                                    <IconEyeOff size={18} />
+                                ) : (
+                                    <IconEye size={18} />
+                                )}
                             </button>
                         </div>
 

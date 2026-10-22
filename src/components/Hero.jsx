@@ -32,6 +32,7 @@ import expressSvg from "../assets/express.svg";
 import blackimg from "../assets/Development-pana.svg";
 
 import TechOrbPit from "./TechOrbPit";
+import { href, Link } from "react-router-dom";
 
 gsap.registerPlugin(ScrollToPlugin);
 
@@ -40,6 +41,7 @@ const NAV_LINKS = [
   { label: "Packages", id: "packages" },
   { label: "Our Work", id: "project" },
   { label: "Contact Us", id: "contact" },
+  { label: "Career", href: "career" }
 ];
 
 const TECH_STACK = [
@@ -403,16 +405,22 @@ const Hero = () => {
         </div>
 
         <nav className="nav-links" aria-label="Primary">
-          {NAV_LINKS.map((link) => (
-            <button
-              key={link.id}
-              type="button"
-              className="nav-link"
-              onClick={() => goTo(link.id)}
-            >
-              {link.label}
-            </button>
-          ))}
+          {NAV_LINKS.map((link) =>
+            link.href ? (
+              <Link key={link.label} to={link.href} className="nav-link">
+                {link.label}
+              </Link>
+            ) : (
+              <button
+                key={link.label}
+                type="button"
+                className="nav-link"
+                onClick={() => goTo(link.id)}
+              >
+                {link.label}
+              </button>
+            )
+          )}
         </nav>
 
         <div className="nav-actions">

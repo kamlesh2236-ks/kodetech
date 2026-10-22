@@ -32,7 +32,7 @@ const JOBS = [
     type: "Full-time",
     location: "Patna, Bihar",
     salary: "Fixed salary + incentives",
-    openings: 2,
+    openings: 3,
     summary:
       "Call leads, explain our web, app and digital marketing services, and book meetings for the sales team.",
     responsibilities: [

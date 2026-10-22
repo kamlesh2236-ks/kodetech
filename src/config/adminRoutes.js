@@ -7,14 +7,14 @@ export const ADMIN_ROUTES = [
         label: "Dashboard",
         icon: LayoutGrid,
         group: "Overview",
-        element: lazy(() => import("../pages/admin/Dashboard")),
+        element: lazy(() => import("../pages/admin/dashboard")),
     },
     {
         path: "enquiry",
         label: "Enquiries",
         icon: Mail,
         group: "Manage",
-        element: lazy(() => import("../pages/admin/Enquiry")),
+        element: lazy(() => import("../pages/admin/enquiry")),
     },
     // {
     //     path: "settings",
